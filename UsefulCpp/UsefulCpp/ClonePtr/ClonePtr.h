@@ -11,7 +11,7 @@
 ///
 /// 
 ///=============================================================================
-template <typename T>
+template <typename CharT>
 class ClonePtr
 {
 public:
@@ -29,7 +29,7 @@ public:
     ///
     /// @param T* object - pointer to a writable heap-allocated object.
     ///=============================================================================
-    explicit ClonePtr(T* object)
+    explicit ClonePtr(CharT* object)
         : m_ptr(object)
     {}
 
@@ -38,7 +38,7 @@ public:
     ///
     /// @param T** object - pointer to a pointer to a writable heap-allocated object.
     ///=============================================================================
-    explicit ClonePtr(T** object)
+    explicit ClonePtr(CharT** object)
         : m_ptr(*object)
     {
         // ptr will not point to a heap-allocated object
@@ -51,8 +51,8 @@ public:
     ///
     /// @param const T* object - pointer to a read-only heap-allocated object.
     ///=============================================================================
-    explicit ClonePtr(const T* object)
-        : m_ptr(object ? new T(*object) : nullptr)
+    explicit ClonePtr(const CharT* object)
+        : m_ptr(object ? new CharT(*object) : nullptr)
     {}
 
     ///=============================================================================
@@ -60,8 +60,8 @@ public:
     ///
     /// @param const T& object - read-only reaference to an object.
     ///=============================================================================
-    explicit ClonePtr(const T& object)
-        : m_ptr(&object ? new T(object) : nullptr)
+    explicit ClonePtr(const CharT& object)
+        : m_ptr(&object ? new CharT(object) : nullptr)
     {}
 
     ///=============================================================================
@@ -70,8 +70,8 @@ public:
     ///
     /// @param ClonePtr& other - read-only reference to another ClonePtr instance.
     ///=============================================================================
-    ClonePtr(const ClonePtr<T>& other)
-        : m_ptr(other.get() ? new T(*(other.get())) : nullptr)
+    ClonePtr(const ClonePtr<CharT>& other)
+        : m_ptr(other.get() ? new CharT(*(other.get())) : nullptr)
     {}
 
     ///=============================================================================
@@ -79,7 +79,7 @@ public:
     ///
     /// @param ClonePtr&& other - rv-reference to another ClonePtr instance.
     ///=============================================================================
-    ClonePtr(ClonePtr<T>&& other)
+    ClonePtr(ClonePtr<CharT>&& other)
         : m_ptr(other.get())
     {}
 
@@ -103,7 +103,7 @@ public:
     ///
     /// @return reference to an insance of a cloned pointer.
     ///=============================================================================
-    ClonePtr<T>& operator=(const ClonePtr<T>& other)
+    ClonePtr<CharT>& operator=(const ClonePtr<CharT>& other)
     {
         // Compares addresses of this instance and other instance
         // if addresses are the same, it means that we try to assign pointer to itself
@@ -113,7 +113,7 @@ public:
             delete m_ptr;
 
             // Assigns new value if other pointer is not empty, otherwise sets nullptr
-            m_ptr = other.get() ? new T(*(other.get())) : nullptr;
+            m_ptr = other.get() ? new CharT(*(other.get())) : nullptr;
         }
         return *this;
     }
@@ -125,7 +125,7 @@ public:
     ///
     /// @return reference to an insance of a cloned pointer.
     ///=============================================================================
-    ClonePtr<T>& operator=(ClonePtr<T>&& other)
+    ClonePtr<CharT>& operator=(ClonePtr<CharT>&& other)
     {
         // Swapping is one of the fastest ways to assign new value
         std::swap(m_ptr, other.get());
@@ -135,7 +135,7 @@ public:
     ///=============================================================================
     /// @brief
     ///=============================================================================
-    ClonePtr<T>& operator=(std::nullptr_t)
+    ClonePtr<CharT>& operator=(std::nullptr_t)
     {
         clear();
         return *this;
@@ -147,28 +147,28 @@ public:
     ///
     /// @return constant reference to data of raw pointer.
     ///=============================================================================
-    const T& operator*() const { return *m_ptr; }
+    const CharT& operator*() const { return *m_ptr; }
 
     ///=============================================================================
     /// @brief Derefence operator which gets reference to data of raw pointer.
     ///
     /// @return reference to data of raw pointer.
     ///=============================================================================
-    T& operator*() { return *m_ptr; }
+    CharT& operator*() { return *m_ptr; }
 
     ///=============================================================================
     /// @brief Arrow operator which gets pointer to constant of type T.
     ///
     /// @return pointer to constant of type T.
     ///=============================================================================
-    const T* operator->() const { return m_ptr; }
+    const CharT* operator->() const { return m_ptr; }
 
     ///=============================================================================
     /// @brief Arrow operator which gets pointer to data of type T.
     ///
     /// @return pointer to data of type T.
     ///=============================================================================
-    T* operator->() { return m_ptr; }
+    CharT* operator->() { return m_ptr; }
 
     ///=============================================================================
     /// @brief Converts object to type bool. if container is empty it returns false, 
@@ -185,7 +185,7 @@ public:
     ///
     /// @return T* m_ptr - raw pointer.
     ///=============================================================================
-    T* get() const { return m_ptr; }
+    CharT* get() const { return m_ptr; }
 
     ///=============================================================================
     /// @brief Checks whether the ClonePtr is empty or not.
@@ -204,7 +204,7 @@ public:
     void clear() { delete m_ptr; }
 
 private:
-    T* m_ptr;
+    CharT* m_ptr;
 };
 
 #endif // CLONEPTR_H
